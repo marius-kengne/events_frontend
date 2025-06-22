@@ -114,8 +114,8 @@ Puis ouvre une Pull Request 🚀
 
 ## 📸 7️⃣ Aperçu de l’application
 
-### 🟦 Écran de connexion
-![Connexion](screenshots/login.PNG)
+<h4>🟦 Écran de connexion</h4>
+<img src="screenshots/login.png" alt="Connexion" width="400"/>
 
 ### 🟦 Écran de creation de compte
 ![Connexion](screenshots/register.PNG)
