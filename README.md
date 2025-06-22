@@ -115,19 +115,19 @@ Puis ouvre une Pull Request 🚀
 ## 📸 7️⃣ Aperçu de l’application
 
 <h4>🟦 Écran de connexion</h4>
-<img src="screenshots/login.PNG" alt="Connexion" width="400"/>
+<img src="screenshots/login.PNG" alt="Connexion" width="400" />
 
-### 🟦 Écran de creation de compte
-![Connexion](screenshots/register.PNG)
+<h4>🟦 Écran de création de compte</h4>
+<img src="screenshots/register.PNG" alt="Création de compte" width="400" />
 
-### 🟦 Écran de creation d'un événement
-![Connexion](screenshots/create_event.PNG)
+<h4>🟦 Écran de création d'un événement</h4>
+<img src="screenshots/create_event.PNG" alt="Création d'événement" width="400" />
 
-### 🟩 Liste des événements
-![Liste](screenshots/event_list.PNG)
+<h4>🟩 Liste des événements</h4>
+<img src="screenshots/event_list.PNG" alt="Liste des événements" width="400" />
 
-### 🟨 Détails d’un événement
-![Détails](screenshots/event_detail.PNG)
+<h4>🟨 Détails d’un événement</h4>
+<img src="screenshots/event_detail.PNG" alt="Détails de l’événement" width="400" />
 
 ## 8️⃣  Ressources utiles
 
