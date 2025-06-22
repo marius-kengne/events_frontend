@@ -112,7 +112,24 @@ Puis ouvre une Pull Request 🚀
 
 ---
 
-## 7️⃣ Ressources utiles
+## 📸 7️⃣ Aperçu de l’application
+
+### 🟦 Écran de connexion
+![Connexion](screenshots/login.PNG)
+
+### 🟦 Écran de creation de compte
+![Connexion](screenshots/register.PNG)
+
+### 🟦 Écran de creation d'un événement
+![Connexion](screenshots/create_event.PNG)
+
+### 🟩 Liste des événements
+![Liste](screenshots/event_list.PNG)
+
+### 🟨 Détails d’un événement
+![Détails](screenshots/event_detail.PNG)
+
+## 8️⃣  Ressources utiles
 
 - [Flutter Documentation](https://docs.flutter.dev)
 - [Codelab Flutter](https://docs.flutter.dev/get-started/codelab)
