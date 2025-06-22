@@ -54,26 +54,69 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Créer un événement')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Titre')),
-            TextField(controller: descriptionController, decoration: const InputDecoration(labelText: 'Description')),
-            TextField(controller: locationController, decoration: const InputDecoration(labelText: 'Lieu')),
-            Row(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(selectedDate == null
-                    ? 'Aucune date choisie'
-                    : '📅 ${selectedDate!.toLocal().toString().split(' ')[0]}'),
-                TextButton(onPressed: _pickDate, child: const Text('Choisir la date'))
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Titre',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: locationController,
+                  decoration: const InputDecoration(
+                    labelText: 'Lieu',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedDate == null
+                            ? '📅 Aucune date choisie'
+                            : '📅 ${selectedDate!.toLocal().toString().split(' ')[0]}',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _pickDate,
+                      child: const Text('Choisir la date'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton.icon(
+                  icon: const Icon(Icons.send),
+                  onPressed: _submit,
+                  label: const Text('Créer l\'événement'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-            isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(onPressed: _submit, child: const Text('Créer')),
-          ],
+          ),
         ),
       ),
     );

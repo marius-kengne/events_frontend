@@ -118,7 +118,7 @@ class ApiService {
     );
 
     print("🗑️ DELETE status: ${response.statusCode}");
-    return response.statusCode == 204;
+    return response.statusCode == 200;
   }
 
 }

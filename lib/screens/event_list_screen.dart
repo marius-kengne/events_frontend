@@ -16,6 +16,8 @@ class EventListScreen extends StatefulWidget {
 class _EventListScreenState extends State<EventListScreen> {
   List<Event> _events = [];
   bool _isLoading = true;
+  int? _publishingEventId;
+  int? _deletingEventId;
 
   @override
   void initState() {
@@ -41,21 +43,30 @@ class _EventListScreenState extends State<EventListScreen> {
 
   Future<void> _publishEvent(int id) async {
     final auth = context.read<AuthProvider>();
+    setState(() => _publishingEventId = id);
+
     try {
       final success = await ApiService().publishEvent(auth.token!, id);
       if (success) {
-        _loadEvents();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('✅ Événement publié')));
+        await _loadEvents();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('✅ Événement publié')),
+        );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('❌ Erreur de publication')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('❌ Erreur de publication')),
+        );
       }
     } catch (e) {
       print("❌ $e");
+    } finally {
+      setState(() => _publishingEventId = null);
     }
   }
 
   Future<void> _deleteEvent(int id) async {
     final auth = context.read<AuthProvider>();
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -68,14 +79,26 @@ class _EventListScreenState extends State<EventListScreen> {
       ),
     );
 
-    if (confirm == true) {
+    if (confirm != true) return;
+
+    setState(() => _deletingEventId = id);
+
+    try {
       final success = await ApiService().deleteEvent(id, auth.token!);
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("🗑️ Événement supprimé")));
-        _loadEvents();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("🗑️ Événement supprimé")),
+        );
+        await _loadEvents();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("❌ Échec de la suppression")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("❌ Échec de la suppression")),
+        );
       }
+    } catch (e) {
+      print("❌ $e");
+    } finally {
+      setState(() => _deletingEventId = null);
     }
   }
 
@@ -88,16 +111,6 @@ class _EventListScreenState extends State<EventListScreen> {
       appBar: AppBar(
         title: const Text('Liste des événements'),
         actions: [
-          if (isOrganizer)
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CreateEventScreen()),
-                ).then((_) => _loadEvents());
-              },
-            ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Déconnexion',
@@ -131,52 +144,84 @@ class _EventListScreenState extends State<EventListScreen> {
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
         onRefresh: _loadEvents,
-        child: ListView.builder(
-          itemCount: _events.length,
-          itemBuilder: (context, index) {
-            final event = _events[index];
-            return Card(
-              margin: const EdgeInsets.all(10),
-              child: ListTile(
-                title: Text(event.title),
-                subtitle: Text(
-                  event.published ? '✅ Publié' : '⏳ Non publié',
-                  style: TextStyle(
-                    color: event.published ? Colors.green : Colors.orange,
-                  ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              children: [
+                if (isOrganizer)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.add),
+                      label: const Text("Créer un événement"),
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => EventDetailScreen(event: event),
-                          ),
-                        );
+                          MaterialPageRoute(builder: (_) => const CreateEventScreen()),
+                        ).then((_) => _loadEvents());
                       },
-                      child: const Text('Voir détails'),
                     ),
-                    if (isOrganizer && !event.published)
-                      TextButton(
-                        onPressed: () => _publishEvent(event.id),
-                        child: const Text('Publier'),
-                      ),
-                    if (isOrganizer)
-                      TextButton(
-                        onPressed: () => _deleteEvent(event.id),
-                        child: const Text(
-                          'Supprimer',
-                          style: TextStyle(color: Colors.red),
+                  ),
+                ..._events.map(
+                      (event) => Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: ListTile(
+                      title: Text(event.title),
+                      subtitle: Text(
+                        event.published ? '✅ Publié' : '⏳ Non publié',
+                        style: TextStyle(
+                          color: event.published ? Colors.green : Colors.orange,
                         ),
                       ),
-                  ],
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EventDetailScreen(event: event),
+                                ),
+                              );
+                            },
+                            child: const Text('Voir détails'),
+                          ),
+                          if (isOrganizer && !event.published)
+                            _publishingEventId == event.id
+                                ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                                : TextButton(
+                              onPressed: () => _publishEvent(event.id),
+                              child: const Text('Publier'),
+                            ),
+                          if (isOrganizer)
+                            _deletingEventId == event.id
+                                ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                                : TextButton(
+                              onPressed: () => _deleteEvent(event.id),
+                              child: const Text(
+                                'Supprimer',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            );
-          },
+              ],
+            ),
+          ),
         ),
       ),
     );

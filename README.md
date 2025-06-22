@@ -1,3 +1,4 @@
+
 # 📅 events_frontend
 
 **events_frontend** est une application Flutter permettant la gestion d’événements avec authentification via JWT. Elle distingue les utilisateurs selon leurs rôles (utilisateur ou organisateur) et offre des fonctionnalités adaptées à chacun.
@@ -27,31 +28,38 @@
 - [Flutter SDK](https://docs.flutter.dev/get-started/install)
 - Un IDE comme Android Studio, IntelliJ ou VS Code
 - Le [Backend Symfony](https://github.com/marius-kengne/events_backend.git)
-- Un backend Symfony REST sécurisé avec JWT exposent :
-    - `POST /api/login`
-    - `POST /api/register`
-    - `GET /api/events`
-    - `POST /api/events`
-    - `POST /api/events/{id}/publish`
-    - `DELETE /api/events/{id}`
+- Le backend Symfony est un REST sécurisé avec JWT exposant :
+  - `POST /api/login`
+  - `POST /api/register`
+  - `GET /api/events`
+  - `POST /api/events`
+  - `POST /api/events/{id}/publish`
+  - `DELETE /api/events/{id}`
+- s'assurer d'avoir docker et docker-compose installés
 
 ---
 
 ## 3️⃣ Installation & Lancement
 
 ```bash
-# 1. Cloner le projet
-git clone https://github.com/votre-utilisateur/events_frontend.git
+# 1. Cloner et lancer le backend (plus d'infos sur le readme du backend) 
+git clone https://github.com/marius-kengne/events_backend.git
+cd events_backend
+docker-compose up --build -d
+
+# 2. Cloner le frontend
+
+git clone https://github.com/marius-kengne/events_frontend.git
 cd events_frontend
 
-# 2. Installer les dépendances
+# 3. Installer les dépendances dans le frontend
 flutter pub get
 
-# 3. Lancer l'application
+# 4. Lancer l'application le frontend
 flutter run
 ```
 
-> Remarque : si vous développez pour le **web**, assurez-vous d’exécuter :
+> Remarque : Pour exécuter pour le **web**, assurez-vous d’exécuter :
 >
 > ```bash
 > flutter run -d chrome

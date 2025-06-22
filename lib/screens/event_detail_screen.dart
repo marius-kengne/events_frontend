@@ -10,27 +10,38 @@ class EventDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(event.title)),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("📍 Lieu: ${event.location ?? 'Non précisé'}", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text("📅 Date: ${event.date?.toLocal().toString().split(' ')[0] ?? 'Non précisée'}", style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text("✉️ Organisateur: ${event.organizerEmail ?? 'Inconnu'}", style: const TextStyle(fontSize: 16)),
-            const SizedBox(height: 8),
-            Text("📝 Description:\n${event.description ?? 'Aucune description'}", style: const TextStyle(fontSize: 16)),
-            const SizedBox(height: 16),
-            Text(
-              event.published ? "✅ Publié" : "❌ Non publié",
-              style: TextStyle(
-                color: event.published ? Colors.green : Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("📍 Lieu: ${event.location ?? 'Non précisé'}",
+                    style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 8),
+                Text(
+                    "📅 Date: ${event.date?.toLocal().toString().split(' ')[0] ?? 'Non précisée'}",
+                    style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 8),
+                Text("✉️ Organisateur: ${event.organizerEmail ?? 'Inconnu'}",
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 8),
+                Text("📝 Description:\n${event.description ?? 'Aucune description'}",
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 16),
+                Text(
+                  event.published ? "✅ Publié" : "❌ Non publié",
+                  style: TextStyle(
+                    color: event.published ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
